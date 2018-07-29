@@ -16,6 +16,9 @@ class MyApp extends StatelessWidget {
 class RandomWordsState extends State<RandomWords> {
   // Prefixing an identifier with an underscore enforces privacy in the Dart language
   final _suggestions = <WordPair>[];
+  // This Set stores the word pairings that the user favorited
+  // Set is preferred to List because a properly implemented Set does not allow duplicate entries
+  final _saved = Set<WordPair>();
   final _biggerFont = const TextStyle(fontSize: 18.0);
 
   Widget _buildSuggestions() {
@@ -48,12 +51,30 @@ class RandomWordsState extends State<RandomWords> {
   }
 
   Widget _buildRow(WordPair pair) {
+    final alreadySaved = _saved.contains(pair);
     return ListTile(
-      title: Text(
-        pair.asPascalCase,
-        style: _biggerFont,
-      ),
-    );
+        title: Text(
+          pair.asPascalCase,
+          style: _biggerFont,
+        ),
+        trailing: Icon(
+          alreadySaved ? Icons.favorite : Icons.favorite_border,
+          color: alreadySaved ? Colors.red : null,
+        ),
+        onTap: () {
+          /**
+           * In Flutter's react style framework, calling setState()
+           * triggers a call to the build() method for the State object,
+           * resulting in an update to the UI.
+           */
+          setState(() {
+            if (alreadySaved) {
+              _saved.remove(pair);
+            } else {
+              _saved.add(pair);
+            }
+          });
+        });
   }
 
   @override
