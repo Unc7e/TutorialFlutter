@@ -82,10 +82,10 @@ class RandomWordsState extends State<RandomWords> {
 
   void _pushSaved() {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) {
-          final tiles = _saved.map(
-            (pair) {
+          final Iterable<ListTile> tiles = _saved.map(
+            (WordPair pair) {
               return ListTile(
                 title: Text(
                   pair.asPascalCase,
@@ -94,7 +94,7 @@ class RandomWordsState extends State<RandomWords> {
               );
             },
           );
-          final divided = ListTile
+          final List<Widget> divided = ListTile
               .divideTiles(
                 context: context,
                 tiles: tiles,
